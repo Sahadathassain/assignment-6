@@ -6,6 +6,7 @@ const loadTools = () => {
   
   const showTools = (data) => {
     const toolsContainer = document.getElementById('tools-container');
+   
     data.forEach(tool => {
       const toolDiv = document.createElement('div');
       toolDiv.classList.add('col');
@@ -21,7 +22,16 @@ const loadTools = () => {
           </ol>                
           </div>
             <hr>
-           
+            <div class="d-flex justify-content-between m-0">
+            <div>
+            <h4>${tool.name}</h4>
+            <p><i class="fa-solid me-2 fa-calendar-days"></i>${tool.published_in}</p>
+            </div>
+            
+            <button class="border-0 text-danger p-1 bg-white"><i class="fa-solid rounded-4 fa-right-long"></i></button>
+            </div>
+        </div>
+    
       `;
       toolsContainer.appendChild(toolDiv);
     });
