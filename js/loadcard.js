@@ -37,7 +37,6 @@ const showTools = (tools, dataLimit) => {
         <button onclick="showModals('${tool.id}')" class="border-0 text-danger p-1 bg-white" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid rounded-4 fa-right-long"></i></button>
           </div>
       </div>
-      
     `;
     toolsContainer.appendChild(toolDiv);
     
@@ -63,8 +62,52 @@ const showModals = async id =>{
   console.log(url);
   const res = await fetch(url);
   const data =await res.json();
-  console.log(data);
+  displayToolsDetails(data);
 }
+const displayToolsDetails = data =>{
+  console.log(data);
+  const toolsDetails = document.getElementById('model-description');
+  toolsDetails.innerHTML = `
+  <div class="d-flex">
+  <div class="bg-warning-subtle w-50">
+  <h4 class=" m-3 fs-5 ">
+  ${data.data.description}
+  </h4>
+  <div class="d-flex justify-content-between mx-1 text-primary rounded-3">
+  <h5 class="fs-5 mx-1">
+  ${data.data.pricing[0].price + ' <br> ' + data.data.pricing[0].plan ? data.data.pricing[0].price + ' <br> ' + data.data.pricing[0].plan :'Free of cost'}
+  </h5>
+  <h5 class="fs-5 mx-1">
+  ${data.data.pricing[1].price + ' <br> ' + data.data.pricing[1].plan ? data.data.pricing[1].price + ' <br> ' + data.data.pricing[1].plan :'Free of cost'}
+  </h5>
+  <h5 class="fs-5 mx-1">
+  ${data.data.pricing[2].price + ' <br> ' + data.data.pricing[2].plan ? data.data.pricing[2].price + ' <br> ' + data.data.pricing[2].plan :'Free of cost'}
+  </h5>
+  </div>
+  <div  class="d-flex  mx-3 justify-content-between">
+  <div>
+  <h4>Features</h4>
+  <ul class=" ms-3 ps-1 pe-0 fs-6">
+        <li>${data.data.features[1].feature_name ? data.data.features[1].feature_name :'No Features'}</li>
+        <li>${data.data.features[2].feature_name ? data.data.features[2].feature_name :'No Features'}</li>
+        <li>${data.data.features[3].feature_name ? data.data.features[3].feature_name :'No Features'}</li>
+        </ul>  
+  </div>
+  <div>
+  <h4>Integrations</h4>
+  <ul class=" ms-3 ps-1 pe-0 fs-6">
+        <li>${data.data.integrations[0] ? data.data.integrations[0] :'No integrations'}</li>
+        <li>${data.data.integrations[1] ? data.data.integrations[1] :'No integrations'}</li>
+        <li>${data.data.integrations[2] ? data.data.integrations[2] :'No integrations'}</li>
+        
+        </ul>  
+  </div>
+  </div>                              
+  </div>
+  
+  `
+}
+
 
 
 
