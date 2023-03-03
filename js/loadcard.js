@@ -37,6 +37,7 @@ const showTools = (tools, dataLimit) => {
         <button onclick="showModals('${tool.id}')" class="border-0 text-danger p-1 bg-white" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid rounded-4 fa-right-long"></i></button>
           </div>
       </div>
+      
     `;
     toolsContainer.appendChild(toolDiv);
     
