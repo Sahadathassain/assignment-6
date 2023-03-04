@@ -12,20 +12,25 @@ const showTools = (tools, dataLimit) => {
   const toolsContainer = document.getElementById('tools-container');
   const showAll = document.getElementById('show-all');
   let shownTools = dataLimit && tools.length > dataLimit ? tools.slice(0, dataLimit) : tools;
-
-  shownTools.forEach(tool => {
+  
+  shownTools.forEach(tool => {        
     const toolDiv = document.createElement('div');
     toolDiv.classList.add('col');
     toolDiv.innerHTML = `
-      <div class="card p-4 ">
+      <div class="card p-4" style="height: 524px;">
         <img src="${tool.image}" class="card-img-top rounded-2 mx-auto my-2" alt="${tool.name}" style="height: 200px;">          
         <div>
         <h4>Features</h4>
         <ol class=" ms-3 ps-1 pe-0 fs-6">
-        <li>${tool.features[0] ? tool.features[0] : 'No Features'}</li>
-        <li>${tool.features[1] ? tool.features[1] : 'No Features'}</li>
-        <li>${tool.features[2] ? tool.features[2] : 'No Features'}</li>
-        <li>${tool.features[3] ? tool.features[3] : 'No Features'}</li>
+        ${tool.features === null ? "No Feature" : `${tool.features
+          .map(
+            (data) =>`<li >${data} 
+            </li>`
+          )
+            .join("")
+        } `
+        } 
+
         </ol>                
           </div>
           <hr>
@@ -39,91 +44,129 @@ const showTools = (tools, dataLimit) => {
       </div>
     `;
     toolsContainer.appendChild(toolDiv);
-
+    
   });
 
-
-  if (dataLimit && tools.length > dataLimit) {
+  
+  if(dataLimit && tools.length > dataLimit) {
     showAll.classList.remove('d-none');
   }
-  else {
+  else{
     showAll.classList.add('d-none');
   }
 
-  showAll.addEventListener('click', function () {
+  showAll.addEventListener('click', function(){
     toolsContainer.innerHTML = '';
     showTools(tools);
   });
 
 
 };
-const showModals = async id => {
-  const url = `https://openapi.programming-hero.com/api/ai/tool/${id}`;
+const showModals = async id =>{
+  const url=`https://openapi.programming-hero.com/api/ai/tool/${id}`;
   console.log(url);
   const res = await fetch(url);
-  const data = await res.json();
+  const data =await res.json();
   displayToolsDetails(data);
 }
-const displayToolsDetails = data => {
+const displayToolsDetails = data =>{
   console.log(data);
   const toolsDetails = document.getElementById('model-description');
   toolsDetails.innerHTML = `
-  <div class="d-flex g-2  ">
-  <div class="bg-warning-subtle container border border-info border-2 rounded ">
+  <div class="d-block d-md-flex">
+  <div class="bg-warning-subtle w-100">
   <h4 class=" m-3 fs-5 ">
   ${data.data.description}
   </h4>
-  <div class="d-flex justify-content-between mx-1  text-white rounded-3">
-  <h5 class="fs-5 mx-1 p-3 bg-danger rounded-2">
-  ${data.data.pricing[0].price + ' <br> ' + data.data.pricing[0].plan ? data.data.pricing[0].price + ' <br> ' + data.data.pricing[0].plan : 'Free of cost'}
+  <div class="d-flex justify-content-between mx-1 text-white rounded-3">
+  <div class="fs-5 ps-2 pt-2 pe-2 bg-danger rounded-3 mx-1">
+  <h5>
+  ${
+  data.data.pricing === null ? " " : data.data.pricing[0].plan}</h5>
+  <h5>
+  ${
+    data.data.pricing === null ? "Free of cost/Basic" : data.data.pricing[0].price}
   </h5>
-  <h5 class="fs-5 mx-1 p-3 bg-danger rounded-2">
-  ${data.data.pricing[1].price + ' <br> ' + data.data.pricing[1].plan ? data.data.pricing[1].price + ' <br> ' + data.data.pricing[1].plan : 'Free of cost'}
+  </div>
+  <div class="fs-5 ps-2 pt-2 pe-2 bg-danger rounded-3 mx-1">
+  <h5>
+  ${
+  data.data.pricing === null ? " " : data.data.pricing[1].plan}</h5>
+  <h5>
+  ${
+    data.data.pricing === null ? "Free of cost/Basic" : data.data.pricing[1].price}
   </h5>
-  <h5 class="fs-5 mx-1 p-2 bg-danger rounded-2">
-  ${data.data.pricing[2].price + ' <br> ' + data.data.pricing[2].plan ? data.data.pricing[2].price + ' <br> ' + data.data.pricing[2].plan : 'Free of cost'}
+  </div>
+  <div class="fs-5 bg-danger ps-2 rounded-3 mx-1">
+  <h5>
+  ${
+  data.data.pricing === null ? " " : data.data.pricing[2].plan}</h5>
+  <h5>
+  ${
+    data.data.pricing === null ? "Free of cost/Basic" : data.data.pricing[2].price}
   </h5>
+  </div>
+
   </div>
   <div  class="d-flex  mx-3 justify-content-between">
-  <div class="mt-5">
+  <div>
   <h4>Features</h4>
-  <ul class=" ms-3  ps-1 pe-0 fs-6">
-        <li>${data.data.features[1].feature_name ? data.data.features[1].feature_name : 'No Features'}</li>
-        <li>${data.data.features[2].feature_name ? data.data.features[2].feature_name : 'No Features'}</li>
-        <li>${data.data.features[3].feature_name ? data.data.features[3].feature_name : 'No Features'}</li>
-        </ul>  
-  </div>
-  <div class="mt-5 mx-2">
-  <h4>Integrations</h4>
   <ul class=" ms-3 ps-1 pe-0 fs-6">
-        <li>${data.data.integrations[0] ? data.data.integrations[0] : 'No integrations'}</li>
-        <li>${data.data.integrations[1] ? data.data.integrations[1] : 'No integrations'}</li>
-        <li>${data.data.integrations[2] ? data.data.integrations[2] : 'No integrations'}</li>
+ <li> 
+ ${data.data.features === null ? "No Feature" : data.data.features[1].feature_name}
+ </li>
+ <li> 
+ ${data.data.features === null ? "No Feature" : data.data.features[2].feature_name}
+ </li>
+ <li> 
+ ${data.data.features === null ? "No Feature" : data.data.features[3].feature_name}
+ </li>
         
-        </ul>  
+  </ul>  
+  </div>
+  <div>
+  <h4>Integrations</h4>
+  <ul class="list-group ms-3 ps-1 pe-0 fs-6">
+  ${data.data.integrations === null ? "No Feature" : `${data.data.integrations
+    .map(
+      (data) =>`<li >${data} 
+      </li>`
+    )
+      .join("")
+  } `
+  } 
+        
+  </ul>  
   </div>
   </div>                              
   </div>
-  <div class=" ms-3 ps-1 pe-0 fs-6 cantainer border border-info border-2 p-3 rounded bg-success-subtle "  >
-  <p class="position-absolute top-0 end-0 bg-danger-subtle  me-4 py-1 px-2 mt-5 rounded">${data.data.accuracy.score ? data.data.accuracy.score : 'no'}:Accuracy</p>
-  <img src="${data.data.image_link[0]}" class="rounded-2 mx-2 my-2 img-fluid " style="max-width: 500px;" alt="${data.data.image_link[0]}" style="height:180px;"> 
-  <h5>${data.data.input_output_examples[0].input}</h5>
-  <p>${data.data.input_output_examples[0].output}</p>
+  <div class="bg-info-subtle ms-md-3 mt-3 mt-md-0 p-1 pe-0 fs-6 w-100">
+  <p class="position-absolute top-0 end-0 bg-danger-subtle  me-4 py-1 px-2 mt-4 rounded">
+  ${data.data.accuracy === null ? " ": data.data.accuracy.score * 100 + "% " + "Accuracy"}
+  </p>
+  <img src="${data.data.image_link[0]}" class="rounded-2 mx-auto w-100 my-2" alt="${data.data.image_link[0]}" style="height:250px;"> 
+  <h5 class="text-center fs-4">
+  ${data.data.input_output_examples === null ? "Can you give any example" : data.data.input_output_examples[0].input}
+  </h5>
+  <p class="text-center"> ${data.data.input_output_examples === null ? "No! No yet, Take a break " : data.data.input_output_examples[0].output}
+ </p>
   </div>
   </div>
 
   `
+  
 }
+
 
 
 
 
 const toggleSpinner = isLoading => {
   const loaderSection = document.getElementById('loader');
-  if (isLoading) {
+  if(isLoading){
     loaderSection.classList.remove('d-none');
   }
-  else {
+  else{
     setTimeout(() => {
       loaderSection.classList.add('d-none');
     }, 1000);
