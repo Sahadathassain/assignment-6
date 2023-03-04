@@ -10,14 +10,13 @@
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <!-- Font awesome -->
     <script src="https://kit.fontawesome.com/62550ae02a.js" crossorigin="anonymous"></script>
-    
 </head>
 
 <body>
     <!-- Header tag -->
     <header class="text-center mt-4">
         <h1 class="">AI Universe Hub</h1>
-        <button id="S" class="bg-danger border-0 rounded-2 text-white px-3 mt-2 py-2">Sort By Date</button>
+        <button id="sort-data" class="bg-danger border-0 rounded-2 text-white px-3 mt-2 py-2">Sort By Date</button>
 
     </header>
     <!-- Main tag add -->
@@ -28,13 +27,14 @@
 
             </div>
             <div id="show-all" class="text-center mt-4 d-none">
+
                 <div id="btn-show-all" class="btn btn-primary">See More</div>
             </div>
         </section>
         <section>
             <!-- loader -->
             <section id="loader" class="d-none">
-                <div style="height: 400px;" class="d-flex justify-content-center">
+                <div style="height: 400px;" class="d-flex justify-content-center align-content-center">
                     <div class="spinner-border  text-success" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
@@ -50,8 +50,9 @@
                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="">
-                            <button type="button" class="btn-close  " data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="modal-header">
+                            <button type="button" class="btn-close  " data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
 
                         <div id="model-description" class="modal-body">

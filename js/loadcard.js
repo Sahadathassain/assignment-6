@@ -1,10 +1,24 @@
+
+
+let sortAsc = true;
+
+const sortTools = (tools) => {
+  if (sortAsc) {
+    return tools.sort((a, b) => new Date(a.published_in) - new Date(b.published_in));
+  } else {
+    return tools.sort((a, b) => new Date(b.published_in) - new Date(a.published_in));
+  }
+};
+
 const loadTools = (dataLimit) => {
   toggleSpinner(true);
   fetch('https://openapi.programming-hero.com/api/ai/tools')
     .then(res => res.json())
     .then(data => {
       toggleSpinner(false);
-      showTools(data.data.tools, dataLimit);
+      const sortedTools = sortTools(data.data.tools); 
+      showTools(sortedTools, dataLimit);
+      addSortByDateListener(sortedTools); 
     });
 };
 
@@ -13,41 +27,11 @@ const showTools = (tools, dataLimit) => {
   const showAll = document.getElementById('show-all');
   let shownTools = dataLimit && tools.length > dataLimit ? tools.slice(0, dataLimit) : tools;
   
-  shownTools.forEach(tool => {        
-    const toolDiv = document.createElement('div');
-    toolDiv.classList.add('col');
-    toolDiv.innerHTML = `
-      <div class="card p-4" style="height: 524px;">
-        <img src="${tool.image}" class="card-img-top rounded-2 mx-auto my-2" alt="${tool.name}" style="height: 200px;">          
-        <div>
-        <h4>Features</h4>
-        <ol class=" ms-3 ps-1 pe-0 fs-6">
-        ${tool.features === null ? "No Feature" : `${tool.features
-          .map(
-            (data) =>`<li >${data} 
-            </li>`
-          )
-            .join("")
-        } `
-        } 
-
-        </ol>                
-          </div>
-          <hr>
-          <div class="d-flex justify-content-between m-0">
-          <div>
-          <h4>${tool.name}</h4>
-          <p><i class="fa-solid me-2 fa-calendar-days"></i>${tool.published_in}</p>
-          </div>
-        <button onclick="showModals('${tool.id}')" class="border-0 text-danger p-1 bg-white" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid rounded-4 fa-right-long"></i></button>
-          </div>
-      </div>
-    `;
+  shownTools.forEach(tool => {
+    const toolDiv = createToolDiv(tool);
     toolsContainer.appendChild(toolDiv);
-    
   });
 
-  
   if(dataLimit && tools.length > dataLimit) {
     showAll.classList.remove('d-none');
   }
@@ -56,21 +40,73 @@ const showTools = (tools, dataLimit) => {
   }
 
   showAll.addEventListener('click', function(){
-    toolsContainer.innerHTML = '';
-    showTools(tools);
+    const newLimit = shownTools.length + dataLimit;
+    const nextTools = tools.slice(shownTools.length, newLimit);
+
+    nextTools.forEach(tool => {
+      const toolDiv = createToolDiv(tool);
+      toolsContainer.appendChild(toolDiv);
+      shownTools.push(tool);
+    });
+
+    if(shownTools.length === tools.length){
+      showAll.classList.add('d-none');
+    }
   });
-
-
 };
+
+const createToolDiv = (tool) => {
+  const toolDiv = document.createElement('div');
+  toolDiv.classList.add('col');
+  toolDiv.innerHTML = `
+    <div class="card p-4" style="height: 524px;">
+      <img src="${tool.image}" class="card-img-top rounded-2 mx-auto my-2" alt="${tool.name}" style="height: 200px;">
+      <div>
+        <h4>Features</h4>
+        <ol class="ms-3 ps-1 pe-0 fs-6">
+          ${tool.features === null ? "No Feature" : `${tool.features
+            .map((data) =>`<li>${data}</li>`)
+            .join("")}`}
+        </ol>
+      </div>
+      <hr>
+      <div class="d-flex justify-content-between m-0">
+        <div>
+          <h4>${tool.name}</h4>
+          <p><i class="fa-solid me-2 fa-calendar-days"></i>${tool.published_in}</p>
+        </div>
+        <button onclick="showModals('${tool.id}')" class="border-0 text-danger p-1 bg-white" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid rounded-4 fa-right-long"></i></button>
+      </div>
+    </div>
+  `;
+  return toolDiv;
+}
+const addSortByDateListener = (shownTools) => {
+  const sortByDateBtn = document.getElementById('sort-data');
+  sortByDateBtn.addEventListener('click', () => {
+    shownTools.sort((a, b) => new Date(b.published_in) - new Date(a.published_in));
+    const toolsContainer = document.getElementById('tools-container');
+    toolsContainer.innerHTML = '';
+    shownTools.forEach(tool => {
+      const toolDiv = createToolDiv(tool);
+      document.getElementById('btn-show-all').classList.add('d-none');
+      toolsContainer.appendChild(toolDiv);
+    });
+  });
+};
+
+
+
+
 const showModals = async id =>{
-  const url=`https://openapi.programming-hero.com/api/ai/tool/${id}`;
-  console.log(url);
+  toggleSpinner(true); 
+  const url=`https://openapi.programming-hero.com/api/ai/tool/${id}`;  
   const res = await fetch(url);
   const data =await res.json();
+  toggleSpinner(false);
   displayToolsDetails(data);
 }
 const displayToolsDetails = data =>{
-  console.log(data);
   const toolsDetails = document.getElementById('model-description');
   toolsDetails.innerHTML = `
   <div class="d-block d-md-flex">
@@ -141,8 +177,8 @@ const displayToolsDetails = data =>{
   </div>                              
   </div>
   <div class="bg-info-subtle ms-md-3 mt-3 mt-md-0 p-1 pe-0 fs-6 w-100">
-  <p class="position-absolute top-0 end-0 bg-danger-subtle  me-4 py-1 px-2 mt-4 rounded">
-  ${data.data.accuracy === null ? " ": data.data.accuracy.score * 100 + "% " + "Accuracy"}
+  <p id="accuracy-id" class="position-absolute top-0 end-0 bg-danger-subtle  me-4 py-1 px-2 mt-4 rounded">
+  ${data.data.accuracy === null ? '' : data.data.accuracy.score * 100 + "% " + "Accuracy"}
   </p>
   <img src="${data.data.image_link[0]}" class="rounded-2 mx-auto w-100 my-2" alt="${data.data.image_link[0]}" style="height:250px;"> 
   <h5 class="text-center fs-4">
@@ -154,10 +190,7 @@ const displayToolsDetails = data =>{
   </div>
 
   `
-  
 }
-
-
 
 
 
