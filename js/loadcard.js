@@ -12,8 +12,8 @@ const showTools = (tools, dataLimit) => {
   const toolsContainer = document.getElementById('tools-container');
   const showAll = document.getElementById('show-all');
   let shownTools = dataLimit && tools.length > dataLimit ? tools.slice(0, dataLimit) : tools;
-  
-  shownTools.forEach(tool => {        
+
+  shownTools.forEach(tool => {
     const toolDiv = document.createElement('div');
     toolDiv.classList.add('col');
     toolDiv.innerHTML = `
@@ -22,10 +22,10 @@ const showTools = (tools, dataLimit) => {
         <div>
         <h4>Features</h4>
         <ol class=" ms-3 ps-1 pe-0 fs-6">
-        <li>${tool.features[0] ? tool.features[0]:'No Features'}</li>
-        <li>${tool.features[1] ? tool.features[1]:'No Features'}</li>
-        <li>${tool.features[2] ? tool.features[2]:'No Features'}</li>
-        <li>${tool.features[3] ? tool.features[3]:'No Features'}</li>
+        <li>${tool.features[0] ? tool.features[0] : 'No Features'}</li>
+        <li>${tool.features[1] ? tool.features[1] : 'No Features'}</li>
+        <li>${tool.features[2] ? tool.features[2] : 'No Features'}</li>
+        <li>${tool.features[3] ? tool.features[3] : 'No Features'}</li>
         </ol>                
           </div>
           <hr>
@@ -39,72 +39,79 @@ const showTools = (tools, dataLimit) => {
       </div>
     `;
     toolsContainer.appendChild(toolDiv);
-    
+
   });
 
-  
-  if(dataLimit && tools.length > dataLimit) {
+
+  if (dataLimit && tools.length > dataLimit) {
     showAll.classList.remove('d-none');
   }
-  else{
+  else {
     showAll.classList.add('d-none');
   }
 
-  showAll.addEventListener('click', function(){
+  showAll.addEventListener('click', function () {
     toolsContainer.innerHTML = '';
     showTools(tools);
   });
 
 
 };
-const showModals = async id =>{
-  const url=`https://openapi.programming-hero.com/api/ai/tool/${id}`;
+const showModals = async id => {
+  const url = `https://openapi.programming-hero.com/api/ai/tool/${id}`;
   console.log(url);
   const res = await fetch(url);
-  const data =await res.json();
+  const data = await res.json();
   displayToolsDetails(data);
 }
-const displayToolsDetails = data =>{
+const displayToolsDetails = data => {
   console.log(data);
   const toolsDetails = document.getElementById('model-description');
   toolsDetails.innerHTML = `
-  <div class="d-flex">
-  <div class="bg-warning-subtle w-50">
+  <div class="d-flex g-2  ">
+  <div class="bg-warning-subtle container border border-info border-2 rounded ">
   <h4 class=" m-3 fs-5 ">
   ${data.data.description}
   </h4>
-  <div class="d-flex justify-content-between mx-1 text-primary rounded-3">
-  <h5 class="fs-5 mx-1">
-  ${data.data.pricing[0].price + ' <br> ' + data.data.pricing[0].plan ? data.data.pricing[0].price + ' <br> ' + data.data.pricing[0].plan :'Free of cost'}
+  <div class="d-flex justify-content-between mx-1  text-white rounded-3">
+  <h5 class="fs-5 mx-1 p-3 bg-danger rounded-2">
+  ${data.data.pricing[0].price + ' <br> ' + data.data.pricing[0].plan ? data.data.pricing[0].price + ' <br> ' + data.data.pricing[0].plan : 'Free of cost'}
   </h5>
-  <h5 class="fs-5 mx-1">
-  ${data.data.pricing[1].price + ' <br> ' + data.data.pricing[1].plan ? data.data.pricing[1].price + ' <br> ' + data.data.pricing[1].plan :'Free of cost'}
+  <h5 class="fs-5 mx-1 p-3 bg-danger rounded-2">
+  ${data.data.pricing[1].price + ' <br> ' + data.data.pricing[1].plan ? data.data.pricing[1].price + ' <br> ' + data.data.pricing[1].plan : 'Free of cost'}
   </h5>
-  <h5 class="fs-5 mx-1">
-  ${data.data.pricing[2].price + ' <br> ' + data.data.pricing[2].plan ? data.data.pricing[2].price + ' <br> ' + data.data.pricing[2].plan :'Free of cost'}
+  <h5 class="fs-5 mx-1 p-2 bg-danger rounded-2">
+  ${data.data.pricing[2].price + ' <br> ' + data.data.pricing[2].plan ? data.data.pricing[2].price + ' <br> ' + data.data.pricing[2].plan : 'Free of cost'}
   </h5>
   </div>
   <div  class="d-flex  mx-3 justify-content-between">
-  <div>
+  <div class="mt-5">
   <h4>Features</h4>
-  <ul class=" ms-3 ps-1 pe-0 fs-6">
-        <li>${data.data.features[1].feature_name ? data.data.features[1].feature_name :'No Features'}</li>
-        <li>${data.data.features[2].feature_name ? data.data.features[2].feature_name :'No Features'}</li>
-        <li>${data.data.features[3].feature_name ? data.data.features[3].feature_name :'No Features'}</li>
+  <ul class=" ms-3  ps-1 pe-0 fs-6">
+        <li>${data.data.features[1].feature_name ? data.data.features[1].feature_name : 'No Features'}</li>
+        <li>${data.data.features[2].feature_name ? data.data.features[2].feature_name : 'No Features'}</li>
+        <li>${data.data.features[3].feature_name ? data.data.features[3].feature_name : 'No Features'}</li>
         </ul>  
   </div>
-  <div>
+  <div class="mt-5 mx-2">
   <h4>Integrations</h4>
   <ul class=" ms-3 ps-1 pe-0 fs-6">
-        <li>${data.data.integrations[0] ? data.data.integrations[0] :'No integrations'}</li>
-        <li>${data.data.integrations[1] ? data.data.integrations[1] :'No integrations'}</li>
-        <li>${data.data.integrations[2] ? data.data.integrations[2] :'No integrations'}</li>
+        <li>${data.data.integrations[0] ? data.data.integrations[0] : 'No integrations'}</li>
+        <li>${data.data.integrations[1] ? data.data.integrations[1] : 'No integrations'}</li>
+        <li>${data.data.integrations[2] ? data.data.integrations[2] : 'No integrations'}</li>
         
         </ul>  
   </div>
   </div>                              
   </div>
-  
+  <div class=" ms-3 ps-1 pe-0 fs-6 cantainer border border-info border-2 p-3 rounded bg-success-subtle "  >
+  <p class="position-absolute top-0 end-0 bg-danger-subtle  me-4 py-1 px-2 mt-5 rounded">${data.data.accuracy.score ? data.data.accuracy.score : 'no'}:Accuracy</p>
+  <img src="${data.data.image_link[0]}" class="rounded-2 mx-2 my-2 img-fluid " style="max-width: 500px;" alt="${data.data.image_link[0]}" style="height:180px;"> 
+  <h5>${data.data.input_output_examples[0].input}</h5>
+  <p>${data.data.input_output_examples[0].output}</p>
+  </div>
+  </div>
+
   `
 }
 
@@ -113,10 +120,10 @@ const displayToolsDetails = data =>{
 
 const toggleSpinner = isLoading => {
   const loaderSection = document.getElementById('loader');
-  if(isLoading){
+  if (isLoading) {
     loaderSection.classList.remove('d-none');
   }
-  else{
+  else {
     setTimeout(() => {
       loaderSection.classList.add('d-none');
     }, 1000);
